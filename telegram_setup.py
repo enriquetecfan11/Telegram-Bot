@@ -1,6 +1,6 @@
 import os   
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -9,6 +9,7 @@ from timenews import noticias
 from timenews import mondejar_weather
 from stonks_price import stonksPrice
 
+from datetime import datetime
 
 # Init the bot and the updater
 
@@ -40,6 +41,44 @@ def init_bot():
     def stonks(update: Update, context: CallbackContext):
         context.bot.send_message(chat_id=update.message.chat_id, text=stonksPrice())
 
+    # Check what the user is typedn and save it in the variable command
+    def typed(update: Update, context: CallbackContext):
+        message = update.message.text
+        print("User said: " + message)
+
+        if message == "hola" or message == "hello" or message == "hi":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Hola!")
+        elif message == "adios" or message == "Adios" or message == "bye":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Adios!")
+        elif message == "que hora es":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Son las " + datetime.now().strftime("%H:%M:%S"))
+        elif message == "que dia es hoy":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Es " + datetime.now().strftime("%A"))
+        elif message == "que dia es mañana":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Es " + (datetime.now() + timedelta(days=1)).strftime("%A"))
+        elif message == "que puedes hacer":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Puedes hacer lo siguiente: /help")
+        elif message == "que es esto":
+            context.bot.send_message(chat_id=update.message.chat_id, text="Esto es un bot hecho por Enrique Rodriguez Vela")
+        
+        # If user post a message 
+
+    # Add the commands to the dispatcher
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('help', help))
+    dispatcher.add_handler(CommandHandler('stop', stop))
+    dispatcher.add_handler(CommandHandler('crypto', crypto))
+    dispatcher.add_handler(CommandHandler('weather', weather))
+    dispatcher.add_handler(CommandHandler('news', news))
+    dispatcher.add_handler(CommandHandler('stonks', stonks))
+    dispatcher.add_handler(MessageHandler(Filters.text, typed))
+
+    # Start the bot
+    updater.start_polling()
+
+    # Run the bot
+    updater.idle()
+        
     # Add the commands to the dispatcher
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('help', help))
@@ -47,6 +86,12 @@ def init_bot():
     dispatcher.add_handler(CommandHandler('weather', weather))
     dispatcher.add_handler(CommandHandler('news', news))
     dispatcher.add_handler(CommandHandler('stonks', stonks))
+    dispatcher.add_handler(CommandHandler('stop', stop))
+
+    dispatcher.add_handler(MessageHandler(Filters.text, typed))
+
+
+
 
     # Start the bot
     updater.start_polling()
