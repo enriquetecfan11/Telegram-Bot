@@ -79,23 +79,3 @@ def init_bot():
     # Run the bot
     updater.idle()
         
-    # Add the commands to the dispatcher
-    dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('help', help))
-    dispatcher.add_handler(CommandHandler('crypto', crypto))
-    dispatcher.add_handler(CommandHandler('weather', weather))
-    dispatcher.add_handler(CommandHandler('news', news))
-    dispatcher.add_handler(CommandHandler('stonks', stonks))
-    dispatcher.add_handler(CommandHandler('stop', stop))
-
-    dispatcher.add_handler(MessageHandler(Filters.text, typed))
-
-
-
-
-    # Start the bot
-    updater.start_polling()
-
-    # Run the bot until you press Ctrl-C
-    updater.idle()
-
