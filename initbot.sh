@@ -12,4 +12,5 @@ echo "CryptoBot build complete"
 echo "Now we run the bot with the docker run command"
 sudo docker run -it tecfanbot 
 echo "                       "
-echo "CryptoBot it's running check telegram and write something" 
+echo "CryptoBot it's running check telegram and write something"
+echo "                       "
