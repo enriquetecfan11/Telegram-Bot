@@ -8,7 +8,7 @@ WORKDIR /code
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy the content to local folder to the working directory
 COPY . /code
