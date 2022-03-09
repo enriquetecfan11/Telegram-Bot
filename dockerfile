@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 # Copy the content to local folder to the working directory
-COPY src/ .
+COPY . /code
 
 # Run the application
 CMD ["python3", "main.py"]
