@@ -16,7 +16,7 @@ from datetime import datetime
 def init_bot():
     updater = Updater(os.getenv("TELEGRAM_TOKEN"), use_context=True)
     dispatcher = updater.dispatcher
-    print("Bot initialized!")
+    #print("Bot initialized!")
 
     # Define the commands
 
@@ -44,7 +44,7 @@ def init_bot():
     # Check what the user is typedn and save it in the variable command
     def typed(update: Update, context: CallbackContext):
         message = update.message.text
-        print("User said: " + message)
+        #print("User said: " + message)
 
         if message == "hola" or message == "hello" or message == "hi":
             context.bot.send_message(chat_id=update.message.chat_id, text="Hola!")

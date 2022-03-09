@@ -36,6 +36,6 @@ def bnb_price():
 def crypto_price():
     response = bitcoin_price() + "\n" + eth_price() + "\n" + bnb_price()
 
-    print("Crypto Response send!")
+   # print("Crypto Response send!")
     return response
 

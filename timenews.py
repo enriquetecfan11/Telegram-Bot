@@ -15,7 +15,7 @@ def mondejar_weather():
     condiciones_texto = condiciones[0].text
 
     output = ("Mondejar have now " + str(redondeo) + "ºC and have " + condiciones_texto)
-    print("Weather Response send!")
+    #print("Weather Response send!")
     return output
 
 def noticias():
@@ -31,5 +31,5 @@ def noticias():
     second = newslist[1]
 
     respone = first.text + second.text
-    print("News Response send!")
+    #print("News Response send!")
     return respone

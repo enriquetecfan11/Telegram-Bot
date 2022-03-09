@@ -36,5 +36,5 @@ def micro_price():
 
 def stonksPrice():
         output = apple_price() + "\n" + tesla_price() + "\n" + meta_price() + "\n" + micro_price()
-        print("Stonks Prices Sended!!")
+        #print("Stonks Prices Sended!!")
         return output
