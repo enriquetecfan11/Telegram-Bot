@@ -15,13 +15,13 @@ def mondejar_weather():
     condiciones_texto = condiciones[0].text
 
     output = ("Mondejar have now " + str(redondeo) + "ºC and have " + condiciones_texto)
-    #print("Weather Response send!")
+    print("Weather Response send!")
     return output
 
 def noticias():
     r = requests.get('https://www.elespanol.com/')
     soup = BeautifulSoup(r.text, 'lxml')
-    news = soup.find_all('h3', class_="size-2")
+    news = soup.find_all('h2', class_="art__title")
 
     newslist = []
     for new in news:
