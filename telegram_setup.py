@@ -46,7 +46,7 @@ def init_bot():
         message = update.message.text
         #print("User said: " + message)
 
-        if message == "hola" or message == "hello" or message == "hi":
+        if message == "hola" or message == "hello" or message == "hi" or message == "Hola":
             context.bot.send_message(chat_id=update.message.chat_id, text="Hola!")
         elif message == "adios" or message == "Adios" or message == "bye":
             context.bot.send_message(chat_id=update.message.chat_id, text="Adios!")
