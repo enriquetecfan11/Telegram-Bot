@@ -1,14 +1,18 @@
+import os
+from datetime import datetime
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 from price_change import crypto_price
 from timenews import noticias_economicas
 from timenews import noticias
 from timenews import mondejar_weather
 from stonks_price import stonksPrice
-from datetime import datetime
-import os
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
-from dotenv import load_dotenv
-load_dotenv()
+
 
 
 # Init the bot and the updater
