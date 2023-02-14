@@ -1,10 +1,13 @@
-import os
 from datetime import datetime
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
-from dotenv import load_dotenv
+from telegram import ForceReply, Update
+from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+import telegram
 import schedule
+import logging
+import time
 
+from dotenv import load_dotenv
+import os
 load_dotenv()
 
 from price_change import crypto_price
@@ -14,87 +17,83 @@ from timenews import mondejar_weather
 from stonks_price import stonksPrice
 from amazonprice import cetus_price
 
-# Init the bot and the updater
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /start is issued."""
+  await update.message.reply_text(f"Hi I`m TecfanBot! Welcome {update.effective_user.first_name}")
+
+async def price(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /price is issued."""
+  await update.message.reply_text(cetus_price())
+
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Echo the user message."""
+  await update.message.reply_text(update.message.text)
+
+async def hola(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /hola is issued."""
+  await update.message.reply_text(f"Hola {update.effective_user.first_name}")
+
+async def crypto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /crypto is issued."""
+  await update.message.reply_text(crypto_price())
+
+async def stonks(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /stonks is issued."""
+  await update.message.reply_text(stonksPrice())
+
+async def news(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /news is issued."""
+  await update.message.reply_text(noticias())
+
+async def news_economicas(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /news is issued."""
+  await update.message.reply_text(noticias_economicas())
+
+async def weather(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /weather is issued."""
+  await update.message.reply_text(mondejar_weather())
+
+# Now make a help show all the commands available
+async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /help is issued."""
+  await update.message.reply_text("I can help you with the following commands: \n /start \n /price \n /crypto \n /stonks \n /noticias \n /economicas \n /weather")
+
+
 def init_bot():
-    updater = Updater(os.getenv("TELEGRAM_TOKEN"), use_context=True)
-    dispatcher = updater.dispatcher
-    #print("Bot initialized!")
+  print("Bot started")
+  app = Application.builder().token(os.getenv('TELEGRAM_TOKEN')).build()
 
-    # Define the commands
-    def start(update: Update, context: CallbackContext):
-        context.bot.send_message(chat_id=update.message.chat_id, text="Hi! I'm a bot that will send you some things" + "\n" "I created by Enrique Rodriguez Vela." + "\n" + "If you want to see the comands type /help.")
-
-    def help(update: Update, context: CallbackContext):
-        context.bot.send_message(chat_id=update.message.chat_id, text="/help: Show this message" + "\n" + "/crypto: Show the current price of crypto currencies" + "\n" + "/news: Show the latest news" + "\n" + "/weather: Show the current weather in Mondejar" + "\n" + "/stonks: Show the current price of Stonks")
-
-    def stop(update: Update, context: CallbackContext):
-        context.bot.send_message(
-            chat_id=update.message.chat_id, text="Goodbye!")
-
-    def crypto(update: Update, context: CallbackContext):
-        context.bot.send_message(
-            chat_id=update.message.chat_id, text=crypto_price())
-
-    def weather(update: Update, context: CallbackContext):
-        context.bot.send_message(
-            chat_id=update.message.chat_id, text=mondejar_weather())
-
-    def news(update: Update, context: CallbackContext):
-        context.bot.send_message(
-            chat_id=update.message.chat_id, text=noticias())
-
-    def stonks(update: Update, context: CallbackContext):
-        context.bot.send_message(
-            chat_id=update.message.chat_id, text=stonksPrice())
-
-    def economicas(update: Update, context: CallbackContext):
-        context.bot.send_message(chat_id=update.message.chat_id, text=noticias_economicas())
+  # Different commands
+  app.add_handler(CommandHandler("start", start))
+  app.add_handler(CommandHandler("price", price))
+  app.add_handler(CommandHandler("crypto", crypto))
+  app.add_handler(CommandHandler("stonks", stonks))
+  app.add_handler(CommandHandler("noticias", news))
+  app.add_handler(CommandHandler("economicas", news_economicas))
+  app.add_handler(CommandHandler("weather", weather))
+  app.add_handler(CommandHandler("help", help))
 
 
-    # Check what the user is typedn and save it in the variable command
-    def typed(update: Update, context: CallbackContext):
-        message = update.message.text
-        #print("User said: " + message)
 
-        if message == "hola" or message == "hello" or message == "hi" or message == "Hola":
-            context.bot.send_message(
-                chat_id=update.message.chat_id, text="Hola!")
-        elif message == "adios" or message == "Adios" or message == "bye":
-            context.bot.send_message(
-                chat_id=update.message.chat_id, text="Adios!")
-        elif message == "que hora es":
-            context.bot.send_message(
-                chat_id=update.message.chat_id, text="Son las " + datetime.now().strftime("%H:%M:%S"))
-        elif message == "que dia es hoy":
-            context.bot.send_message(
-                chat_id=update.message.chat_id, text="Es " + datetime.now().strftime("%A"))
-        elif message == "que dia es mañana":
-            context.bot.send_message(chat_id=update.message.chat_id, text="Es " + (
-                datetime.now() + timedelta(days=1)).strftime("%A"))
-        elif message == "que puedes hacer":
-            context.bot.send_message(
-                chat_id=update.message.chat_id, text="Puedes hacer lo siguiente: /help")
-        elif message == "que es esto":
-            context.bot.send_message(
-                chat_id=update.message.chat_id, text="Esto es un bot hecho por Enrique Rodriguez Vela")
+  # on non command i.e message - echo the message on Telegram
+  # app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+  app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hola))
 
-    # If user post a message add the commands to the dispatcher
-    dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('help', help))
-    dispatcher.add_handler(CommandHandler('stop', stop))
-    dispatcher.add_handler(CommandHandler('crypto', crypto))
-    dispatcher.add_handler(CommandHandler('weather', weather))
-    dispatcher.add_handler(CommandHandler('news', news))
-    dispatcher.add_handler(CommandHandler('stonks', stonks))
-    dispatcher.add_handler(CommandHandler('economicas', economicas))
-    dispatcher.add_handler(MessageHandler(Filters.text, typed))
-    schedule.every().day.at("09:00").do(cetus_price)
-    schedule.every().day.at("12:00").do(cetus_price)
-    schedule.every().day.at("21:00").do(cetus_price)
-    schedule.every(2).minutes.do(chat_id=update.message.chat_id, text="prueba")
 
-    # Start the bot
-    updater.start_polling()
 
-    # Run the bot
-    updater.idle()
+
+
+
+  # Start the Bot
+  app.run_polling()
+
+
+
+
+

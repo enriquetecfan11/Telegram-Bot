@@ -5,21 +5,14 @@ from datetime import datetime
 # https://amzn.to/3E7V45Y -> Cetus Pro FPV
 
 def cetus_price():
-    r = requests.get('https://amzn.to/3E7V45Y')
-    soup = BeautifulSoup(r.text, 'lxml')
+  url = 'https://amzn.to/3E7V45Y'
+  headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
 
-    # price = span class="a-price-whole"
-    price = soup.find_all('span', class_='a-price-whole')
-    price_text = price[0].text
+  response = requests.get(url, headers=headers)
+  soup = BeautifulSoup(response.content, 'html.parser')
 
-    output = ("The current price of Cetus Pro FPV is: " + price_text)
-    print("Price Response send! and it is" + output)
-    return output
+  price = soup.find('span', attrs={'class': 'a-offscreen'}).text
 
+  price_text = "The current price of Cetus Pro FPV is: " + str(price)
 
-# This only for developer support
-def main():
-    cetus_price()
-
-if __name__ == "__main__":
-    main()
+  return price_text
