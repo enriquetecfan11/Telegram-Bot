@@ -23,6 +23,9 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+# ---------------------------------------------
+
+# All commands
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /start is issued."""
   await update.message.reply_text(f"Hi I`m TecfanBot! Welcome {update.effective_user.first_name}")
@@ -34,10 +37,6 @@ async def price(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Echo the user message."""
   await update.message.reply_text(update.message.text)
-
-async def hola(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-  """Send a message when the command /hola is issued."""
-  await update.message.reply_text(f"Hola {update.effective_user.first_name}")
 
 async def crypto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /crypto is issued."""
@@ -64,12 +63,19 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /help is issued."""
   await update.message.reply_text("I can help you with the following commands: \n /start \n /price \n /crypto \n /stonks \n /noticias \n /economicas \n /weather")
 
+# ---------------------------------------------
+
+# All messages
+async def hola(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+  """Send a message when the command /hola is issued."""
+  await update.message.reply_text(f"Hola {update.effective_user.first_name}")
+
 
 def init_bot():
   print("Bot started")
   app = Application.builder().token(os.getenv('TELEGRAM_TOKEN')).build()
 
-  # Different commands
+  # All commands
   app.add_handler(CommandHandler("start", start))
   app.add_handler(CommandHandler("price", price))
   app.add_handler(CommandHandler("crypto", crypto))
@@ -79,16 +85,10 @@ def init_bot():
   app.add_handler(CommandHandler("weather", weather))
   app.add_handler(CommandHandler("help", help))
 
+  # ---------------------------------------------
 
-
-  # on non command i.e message - echo the message on Telegram
-  # app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+  # All messages
   app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hola))
-
-
-
-
-
 
   # Start the Bot
   app.run_polling()
