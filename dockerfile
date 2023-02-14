@@ -1,17 +1,13 @@
-# First base image (host OS)
-from python:3.8.9
+FROM python:3.8
 
-# Working Directory
-WORKDIR /code
+WORKDIR /app
 
-# Copy dependencies
 COPY requirements.txt .
 
-# Install dependencies
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Copy the content to local folder to the working directory
-COPY . /code
+COPY . .
+COPY .env .
 
-# Run the application
-CMD ["python3", "main.py"]
+CMD ["python", "app.py"]
