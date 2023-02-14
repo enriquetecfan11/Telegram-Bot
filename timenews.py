@@ -15,8 +15,7 @@ def mondejar_weather():
     condiciones = soup.find_all('div', class_='condition-icon')
     condiciones_texto = condiciones[0].text
 
-    output = ("Mondejar have now " + str(redondeo) +
-              "ºC and have " + condiciones_texto)
+    output = ("Mondejar have now " + str(redondeo) +"ºC and have " + condiciones_texto)
     print("Weather Response send!")
     return output
 
