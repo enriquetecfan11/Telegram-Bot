@@ -3,35 +3,29 @@ from datetime import datetime
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
 from dotenv import load_dotenv
+import schedule
 
 load_dotenv()
-
 
 from price_change import crypto_price
 from timenews import noticias_economicas
 from timenews import noticias
 from timenews import mondejar_weather
 from stonks_price import stonksPrice
-
-
+from amazonprice import cetus_price
 
 # Init the bot and the updater
-
-
 def init_bot():
     updater = Updater(os.getenv("TELEGRAM_TOKEN"), use_context=True)
     dispatcher = updater.dispatcher
     #print("Bot initialized!")
 
     # Define the commands
-
     def start(update: Update, context: CallbackContext):
-        context.bot.send_message(chat_id=update.message.chat_id, text="Hi! I'm a bot that will send you some things" +
-                                 "\n" "I created by Enrique Rodriguez Vela." + "\n" + "If you want to see the comands type /help.")
+        context.bot.send_message(chat_id=update.message.chat_id, text="Hi! I'm a bot that will send you some things" + "\n" "I created by Enrique Rodriguez Vela." + "\n" + "If you want to see the comands type /help.")
 
     def help(update: Update, context: CallbackContext):
-        context.bot.send_message(chat_id=update.message.chat_id, text="/help: Show this message" + "\n" + "/crypto: Show the current price of crypto currencies" +
-                                 "\n" + "/news: Show the latest news" + "\n" + "/weather: Show the current weather in Mondejar" + "\n" + "/stonks: Show the current price of Stonks")
+        context.bot.send_message(chat_id=update.message.chat_id, text="/help: Show this message" + "\n" + "/crypto: Show the current price of crypto currencies" + "\n" + "/news: Show the latest news" + "\n" + "/weather: Show the current weather in Mondejar" + "\n" + "/stonks: Show the current price of Stonks")
 
     def stop(update: Update, context: CallbackContext):
         context.bot.send_message(
@@ -54,8 +48,8 @@ def init_bot():
             chat_id=update.message.chat_id, text=stonksPrice())
 
     def economicas(update: Update, context: CallbackContext):
-        context.bot.send_message(
-            chat_id=update.message.chat_id, text=noticias_economicas())
+        context.bot.send_message(chat_id=update.message.chat_id, text=noticias_economicas())
+
 
     # Check what the user is typedn and save it in the variable command
     def typed(update: Update, context: CallbackContext):
@@ -84,9 +78,7 @@ def init_bot():
             context.bot.send_message(
                 chat_id=update.message.chat_id, text="Esto es un bot hecho por Enrique Rodriguez Vela")
 
-        # If user post a message
-
-    # Add the commands to the dispatcher
+    # If user post a message add the commands to the dispatcher
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('help', help))
     dispatcher.add_handler(CommandHandler('stop', stop))
@@ -96,6 +88,10 @@ def init_bot():
     dispatcher.add_handler(CommandHandler('stonks', stonks))
     dispatcher.add_handler(CommandHandler('economicas', economicas))
     dispatcher.add_handler(MessageHandler(Filters.text, typed))
+    schedule.every().day.at("09:00").do(cetus_price)
+    schedule.every().day.at("12:00").do(cetus_price)
+    schedule.every().day.at("21:00").do(cetus_price)
+    schedule.every(2).minutes.do(chat_id=update.message.chat_id, text="prueba")
 
     # Start the bot
     updater.start_polling()
