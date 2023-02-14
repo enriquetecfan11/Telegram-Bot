@@ -24,7 +24,6 @@ logging.basicConfig(
 )
 
 # ---------------------------------------------
-
 # All commands
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /start is issued."""
@@ -64,7 +63,6 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   await update.message.reply_text("I can help you with the following commands: \n /start \n /price \n /crypto \n /stonks \n /noticias \n /economicas \n /weather")
 
 # ---------------------------------------------
-
 # All messages
 async def hola(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /hola is issued."""
@@ -86,7 +84,6 @@ def init_bot():
   app.add_handler(CommandHandler("help", help))
 
   # ---------------------------------------------
-
   # All messages
   app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hola))
 
