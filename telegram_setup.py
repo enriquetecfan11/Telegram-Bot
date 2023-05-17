@@ -1,14 +1,13 @@
-from datetime import datetime
-from telegram import ForceReply, Update
-from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
-import telegram
-import schedule
 import logging
-import time
+from telegram import Update, ForceReply
+from telegram.ext import Updater, CommandHandler, MessageHandler, Application, ContextTypes, MessageHandler
+import os
 
 from dotenv import load_dotenv
-import os
 load_dotenv()
+
+import tracemalloc
+tracemalloc.start()
 
 from price_change import crypto_price
 from timenews import noticias_economicas
@@ -24,7 +23,7 @@ logging.basicConfig(
 )
 
 # ---------------------------------------------
-# All commands
+# Start commands
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /start is issued."""
   await update.message.reply_text(f"Hi I`m TecfanBot! Welcome {update.effective_user.first_name}")
@@ -60,37 +59,31 @@ async def weather(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # Now make a help show all the commands available
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
   """Send a message when the command /help is issued."""
-  await update.message.reply_text("I can help you with the following commands: \n /start \n /price \n /crypto \n /stonks \n /noticias \n /economicas \n /weather")
+  await update.message.reply_text("Los comandos de este bot son: \n /start \n /price \n /crypto \n /stonks \n /noticias \n /economicas \n /weather")
 
 # ---------------------------------------------
-# All messages
-async def hola(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-  """Send a message when the command /hola is issued."""
-  await update.message.reply_text(f"Hola {update.effective_user.first_name}")
-
-
 def init_bot():
-  print("Bot started")
-  app = Application.builder().token(os.getenv('TELEGRAM_TOKEN')).build()
-
-  # All commands
-  app.add_handler(CommandHandler("start", start))
-  app.add_handler(CommandHandler("price", price))
-  app.add_handler(CommandHandler("crypto", crypto))
-  app.add_handler(CommandHandler("stonks", stonks))
-  app.add_handler(CommandHandler("noticias", news))
-  app.add_handler(CommandHandler("economicas", news_economicas))
-  app.add_handler(CommandHandler("weather", weather))
-  app.add_handler(CommandHandler("help", help))
-
-  # ---------------------------------------------
-  # All messages
-  app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hola))
-
-  # Start the Bot
-  app.run_polling()
+    """Start the bot."""
+    # Create the Application and pass it your bot's token.
+    app = Application.builder().token(os.getenv('TELEGRAM_TOKEN')).build()
 
 
+    # ---------------------------------------------
+    # All commands
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("price", price))
+    app.add_handler(CommandHandler("help", help))
+    app.add_handler(CommandHandler("echo", echo))
+    app.add_handler(CommandHandler("crypto", crypto))
+    app.add_handler(CommandHandler("stonks", stonks))
+    app.add_handler(CommandHandler("news", news))
+    app.add_handler(CommandHandler("news_economicas", news_economicas))
+    app.add_handler(CommandHandler("weather", weather))
+
+    # ---------------------------------------------
 
 
+    # ---------------------------------------------
+    # Start the Bot
+    app.run_polling()
 

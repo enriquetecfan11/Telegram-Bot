@@ -1,37 +1,39 @@
-# Tecfan's Telegram-Bot
+<h1 align="center">Tecfan's Telegram-Bot</h1>
+
+<p align="center">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/enriquetecfan11/telegram-bot?color=56BEB8">
+
+## Description / Descripción
 
 Welcome to the developer page of Tecfan's Telegram-Bot.
 
 I wan to make this because i want to learn python, and i want to know what is the best way to make a bot.
 
-I like crypto currencies, news and stonks.
-
 I have twitter @enriquetecfan, if you want to follow me or ask  me something about the bot.
 
+
+Bienvenido a la página de desarrollo del Telegram-Bot de Tecfan.
+
+Quiero hacer esto porque quiero aprender python, y quiero saber cual es la mejor manera de hacer un bot.
+
+Tengo twitter @enriquetecfan, por si quieres seguirme o preguntarme algo sobre el bot.
+
+## Comandos del bot / Bot Commands
+
 The bot have this comands:
-+ /help: Show this message 
+
++ /help: Show this message
 + /crypto: Show the current price of crypto currencies
 + /news: Show the latest news
 + /weather: Show the current weather in Mondejar
 + /stonks: Show the current price of Stonks
 + /economicas: Show the latest news of economics news
 
-### Things to do after install the page
+El bot tiene estos comandos:
 
-``` 
-// Then build the container with this comand 
-docker build -t tecfanbot .
-
-// Then run the container with this command
-docker run -it tecfanbot 
-
-// Show the container in the system
- docker ps -a 
-
-// Run the container in background 
-- docker container run -d [docker_image]
-
-// remove all the containers
-- docker system prune
-
-```
++ /help: Mostrar este mensaje
++ /crypto: Mostrar el precio actual de las criptomonedas
++ /news: Mostrar las últimas noticias
++ /tiempo: Mostrar el tiempo actual en Mondejar
++ /stonks: Mostrar el precio actual de las Stonks
++ /economicas: Mostrar las últimas noticias de economía
