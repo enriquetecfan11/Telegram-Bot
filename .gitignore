@@ -12,3 +12,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Things
+requirements.txt
+runtimame.txt
+telegram_setup.pyc
+dockerfile
