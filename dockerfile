@@ -1,5 +1,9 @@
 # Utiliza una imagen base de Python
-FROM python:3.10.0
+FROM python:3.8
+
+# Upgrade pip
+RUN pip install --upgrade pip
+
 
 # Establece el directorio de trabajo
 WORKDIR /app

@@ -1,5 +1,4 @@
 import logging
-from turtle import update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import requests
 from PIL import Image, ImageDraw, ImageFont
