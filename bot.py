@@ -147,7 +147,39 @@ def bolsaOpen(update, context):
     """
     # Enviar los horarios de apertura de las bolsas al usuario
     context.bot.send_message(chat_id=update.effective_chat.id, text=output)
-    
+
+# Función para el comando /miestacion, que muestra el estado de una mi propia estación de temperatura
+def miestacion(update, context):
+  # Obtener los datos de la estación
+  response = requests.get("http://localhost:5000/api/miniestacion")
+
+  # Convertir los datos a formato JSON
+  data = response.json()
+  # print("Datos de la estacion: ", data)
+
+  # Get the last data from the station
+  data = data[-1]
+
+  # Get createdAt from the data and convert it to datetime
+  createdAt = datetime.strptime(data['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
+  
+  # Create a string with the data
+  message = f"""
+  Datos de la mi estación de temperatura:
+
+  - Temperatura: {data['temperatura']} ºC
+  - Humedad: {data['humedad']} %
+  - Presión: {data['presion']} hPa
+  - Luxes: {data['luxes']} lux
+  - Señal Wifi: {data['wifiRsii']} %
+  - Altitud: {data['altura']} m
+  - Fecha: {createdAt.strftime('%d/%m/%Y')}
+  """
+
+  # Enviar el mensaje al usuario
+  context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+
+
 # Función para el comando /help
 def help(update, context):
     # Scrape the Metro Madrid "La red en tiempo real" status
@@ -164,13 +196,15 @@ def help(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="/stop - Para el envio de mensajes automaticos")
     context.bot.send_message(chat_id=update.effective_chat.id, text="/help - Muestra esta ayuda")
     context.bot.send_message(chat_id=update.effective_chat.id, text="/bolsa - Muestra los horarios de apertura de las bolsas")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="/miestacion - Muestra el estado de mi estacion de temperatura")
     # Log the message
     logger.info(f"User {update.effective_user['username']} asked for help")
 
 # ------------------------------
 # Comandos programados
 # ------------------------------
-    
+
+# Funcion para enviar mensajes automaticos 
 def callback_auto_message(update, context):
   now = datetime.now(timezone('Europe/Madrid'))
   current_time = now.strftime("%H:%M:%S")
@@ -223,10 +257,11 @@ def stop_notify(update, context):
     job = context.job_queue.get_jobs_by_name(str(chat_id))
     job[0].schedule_removal()
 
-
+# Manejador de comandos para el comando /auto
 dispatcher.add_handler(CommandHandler("auto", start_auto_messaging))
 logger.info("Auto handler added")
 
+# Manejador de comandos para el comando /stop
 dispatcher.add_handler(CommandHandler("stop", stop_notify))
 logger.info("Stop handler added")
 
@@ -278,6 +313,10 @@ logger.info("Noticias handler added")
 # Agregar un manejador para el comando /bolsa
 bolsa_handler = CommandHandler('bolsa', bolsaOpen)
 dispatcher.add_handler(bolsa_handler)
+
+# Agregar un manejador para el comando /miestacion
+miestacion_handler = CommandHandler('miestacion', miestacion)
+dispatcher.add_handler(miestacion_handler)
 
 # ------------------------------
 # Iniciar el bot
