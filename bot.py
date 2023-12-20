@@ -10,8 +10,7 @@ from datetime import datetime, time
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 import schedule
-import pytz
-
+from pytz import timezone
 
 load_dotenv()
 
@@ -45,6 +44,7 @@ from scripts.metro_functions import scrape_metro_status
 
 # Importa funciones relacionadas con los precios de las acciones desde el archivo stonks.py
 from scripts.stonks import allPrice
+
 
 # Importa funciones relacionadas con las noticias desde el archivo news.py
 from scripts.news import noticias_economicas_español
@@ -171,28 +171,28 @@ def help(update, context):
 # Comandos programados
 # ------------------------------
     
-def callback_auto_message(context):
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
+def callback_auto_message(update, context):
+  now = datetime.now(timezone('Europe/Madrid'))
+  current_time = now.strftime("%H:%M:%S")
 
-    if current_time == "09:00:00":
-        # Enviar mensaje de espera al usuario
-        context.bot.send_message(chat_id='207196532', text="Buenos Dias! Son las 9:00")
-        context.bot.send_message(chat_id='207196532', text="Buenos Dias! Bolsa de Madrid abierta.")
-    elif current_time == "15:30:00":
-        # Enviar mensaje de espera al usuario
-        context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Son las 15:30")
-        context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Bolsa de Nueva York abierta.")
-    elif current_time == "17:30:00":
-        # Enviar mensaje de espera al usuario
-        context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Son las 17:30")
-        context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Bolsa de Madrid cerrada.")
-    elif current_time == "22:00:00":
-        # Enviar mensaje de espera al usuario
-        context.bot.send_message(chat_id='207196532', text="Buenas Noches! Son las 22:00")
-        context.bot.send_message(chat_id='207196532', text="Buenas Noches! Bolsa de Nueva York cerrada.")
-    else:
-        context.bot.send_message(chat_id='207196532', text="No hay mensajes programados para esta hora")
+  if current_time == "09:00:00":
+    # Enviar mensaje de espera al usuario
+    context.bot.send_message(chat_id='207196532', text="Buenos Dias! Son las 9:00")
+    context.bot.send_message(chat_id='207196532', text="Buenos Dias! Bolsa de Madrid abierta.")
+  elif current_time == "15:30:00":
+    # Enviar mensaje de espera al usuario
+    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Son las 15:30")
+    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Bolsa de Nueva York abierta.")
+  elif current_time == "17:30:00":
+    # Enviar mensaje de espera al usuario
+    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Son las 17:30")
+    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Bolsa de Madrid cerrada.")
+  elif current_time == "22:00:00":
+    # Enviar mensaje de espera al usuario
+    context.bot.send_message(chat_id='207196532', text="Buenas Noches! Son las 22:00")
+    context.bot.send_message(chat_id='207196532', text="Buenas Noches! Bolsa de Nueva York cerrada.")
+  else:
+    context.bot.send_message(chat_id='207196532', text="No hay mensajes programados para esta hora")
 
 # Funcion para iniciar el envio de mensajes automaticos
 def start_auto_messaging(update, context):
