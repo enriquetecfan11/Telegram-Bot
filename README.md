@@ -37,3 +37,27 @@ El bot tiene estos comandos:
 + /tiempo: Mostrar el tiempo actual en Mondejar
 + /stonks: Mostrar el precio actual de las Stonks
 + /economicas: Mostrar las últimas noticias de economía
+
+## Para poder usar el bot con docker / To use the bot with docker
+
+Tienes que ejecutar este comando:
+```cli
+docker build -t telegram-bot .
+```
+
+Y después, este:
+```cli
+docker run -d --restart=always --name telegram-bot telegram-bot
+```
+Y ya está, ya tienes el bot funcionando.
+
+You have to execute this command:
+```cli
+docker build -t telegram-bot .
+```
+
+And then, this:
+```cli
+docker run -d --restart=always --name telegram-bot telegram-bot
+```
+And that's it, you have the bot working.
