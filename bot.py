@@ -10,6 +10,7 @@ from datetime import datetime, time
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 import schedule
+import pytz
 from pytz import timezone
 
 load_dotenv()
@@ -108,10 +109,16 @@ def hora(update, context):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
 
+    # Enviar la hora actual al usuario
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"Son las {current_time}")
+
+    # Log the message
+    logger.info(f"User {update.effective_user['username']} asked for the time")
+
 # Función para el comando /stonks
 def stonksPrice(update, context):
     # Enviar mensaje de espera al usuario
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Enviando precios de las acciones...")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Enviando precios de las acciones... (esto puede tardar unos segundos)")
     
     logger.info("Stonks Prices Sent!!")
     logger.info(allPrice())
@@ -151,7 +158,7 @@ def bolsaOpen(update, context):
 # Función para el comando /miestacion, que muestra el estado de una mi propia estación de temperatura
 def miestacion(update, context):
   # Obtener los datos de la estación
-  response = requests.get("http://localhost:5000/api/miniestacion")
+  response = requests.get("http://192.168.1.77:5000/api/miniestacion")
 
   # Convertir los datos a formato JSON
   data = response.json()
@@ -161,7 +168,12 @@ def miestacion(update, context):
   data = data[-1]
 
   # Get createdAt from the data and convert it to datetime
+  date = datetime.strptime(data['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
+
+  # Get from createdAt the hour example 2023-12-20T15:54:12.633Z i need 15:54:12
   createdAt = datetime.strptime(data['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
+  hour = createdAt.strftime("%H:%M:%S")
+
   
   # Create a string with the data
   message = f"""
@@ -173,32 +185,35 @@ def miestacion(update, context):
   - Luxes: {data['luxes']} lux
   - Señal Wifi: {data['wifiRsii']} %
   - Altitud: {data['altura']} m
-  - Fecha: {createdAt.strftime('%d/%m/%Y')}
+  - Fecha: {date.strftime('%d/%m/%Y')}
+  - Hora: {hour}
   """
 
   # Enviar el mensaje al usuario
   context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
-
 # Función para el comando /help
 def help(update, context):
-    # Scrape the Metro Madrid "La red en tiempo real" status
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Estos son los comandos que puedes utilizar:")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/start - Inicia el bot")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/price <nombre crypto> - Muestra los precios de las criptomonedas")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/weather <nombre ciudad> - Muestra el tiempo en una ciudad")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/metro - Muestra el estado del Metro de Madrid")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/hora - Muestra la hora actual")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/stonks - Muestra los precios de las acciones")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/noticias - Muestra las noticias")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/noticias_economicas - Muestra las noticias economicas")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/auto - Inicia el envio de mensajes automaticos")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/stop - Para el envio de mensajes automaticos")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/help - Muestra esta ayuda")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/bolsa - Muestra los horarios de apertura de las bolsas")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="/miestacion - Muestra el estado de mi estacion de temperatura")
+   #Comandos disponibles
+    output = """
+    Comandos disponibles:
+    - /start: Inicia el bot
+    - /price <nombre crypto>: Muestra el precio de una criptomoneda
+    - /weather <nombre ciudad> : Muestra el tiempo de una ciudad
+    - /metro: Muestra el estado de las líneas de Metro de Madrid
+    - /hora: Muestra la hora actual
+    - /stonks: Muestra los precios de las acciones
+    - /noticias: Muestra las noticias económicas
+    - /bolsa: Muestra los horarios de apertura de las bolsas
+    - /miestacion: Muestra los datos de mi estación de temperatura
+    - /auto: Inicia el envio de mensajes automaticos
+    - /stop: Para el envio de mensajes automaticos
+    """
+    # Enviar los comandos disponibles al usuario
+    context.bot.send_message(chat_id=update.effective_chat.id, text=output)
     # Log the message
     logger.info(f"User {update.effective_user['username']} asked for help")
+
 
 # ------------------------------
 # Comandos programados
