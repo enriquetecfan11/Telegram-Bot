@@ -174,7 +174,6 @@ def miestacion(update, context):
   createdAt = datetime.strptime(data['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
   hour = createdAt.strftime("%H:%M:%S")
 
-  
   # Create a string with the data
   message = f"""
   Datos de la mi estación de temperatura:
@@ -191,6 +190,7 @@ def miestacion(update, context):
 
   # Enviar el mensaje al usuario
   context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+  logger.info(f"User {update.effective_user['username']} asked for mi estacion data")
 
 # Función para el comando /help
 def help(update, context):
