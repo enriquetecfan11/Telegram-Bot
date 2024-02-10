@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import os
 from datetime import datetime, time
-
+import base64
 # import time
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
@@ -192,6 +192,42 @@ def miestacion(update, context):
   context.bot.send_message(chat_id=update.effective_chat.id, text=message)
   logger.info(f"User {update.effective_user['username']} asked for mi estacion data")
 
+
+# Hacer una peticion a la API que genera una imagen http://localhost:8000/generate?prompt= || prompt es texto que escribe el usuario
+def generate_image(update, context):
+    logger.info(f"User {update.effective_user['username']} asked for image generation")
+    # Send the message to the user
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Generando imagen...")
+    # Obtenemos el texto completo después del comando
+    prompt = ' '.join(context.args)
+    print("User prompt: ", prompt)
+    response = requests.get(f"http://localhost:8000/generate?prompt={prompt}")
+    # Si la respuesta es correcta y el codigo de estado es 200
+    if response.status_code == 200:
+
+    # hacemos una peticion a la API para obtener la imagen
+      response = requests.get("http://localhost:8000/image")
+      response_data = response.json()
+
+      if response_data['image']:
+        # Decodificamos la imagen
+        image = base64.b64decode(response_data['image'])
+        # Creamos una imagen
+        image = Image.open(BytesIO(image))
+        # Guardamos la imagen
+        image.save("image.png")
+        # Enviamos la imagen al usuario
+        context.bot.send_photo(chat_id=update.effective_chat.id, photo=open("image.png", 'rb'))
+        # Eliminamos la imagen
+        os.remove("image.png")
+      else:
+        # Si no hay imagen
+        context.bot.send_message(chat_id=update.effective_chat.id, text="No se ha podido enviar la imagen")
+    else:
+      # Si no hay respuesta
+      context.bot.send_message(chat_id=update.effective_chat.id, text="No se ha podido generar la imagen")
+
+
 # Función para el comando /help
 def help(update, context):
    #Comandos disponibles
@@ -208,6 +244,7 @@ def help(update, context):
     - /miestacion: Muestra los datos de mi estación de temperatura
     - /auto: Inicia el envio de mensajes automaticos
     - /stop: Para el envio de mensajes automaticos
+    - /generate <texto>: Genera una imagen con el texto que le pasemos
     """
     # Enviar los comandos disponibles al usuario
     context.bot.send_message(chat_id=update.effective_chat.id, text=output)
@@ -328,10 +365,17 @@ logger.info("Noticias handler added")
 # Agregar un manejador para el comando /bolsa
 bolsa_handler = CommandHandler('bolsa', bolsaOpen)
 dispatcher.add_handler(bolsa_handler)
+logger.info("Bolsa handler added")
 
 # Agregar un manejador para el comando /miestacion
 miestacion_handler = CommandHandler('miestacion', miestacion)
 dispatcher.add_handler(miestacion_handler)
+logger.info("Miestacion handler added")
+
+# Agregar un manejador para el comando /generate
+generate_handler = CommandHandler('generate', generate_image)
+dispatcher.add_handler(generate_handler)
+logger.info("Image Generate handler added")
 
 # ------------------------------
 # Iniciar el bot
