@@ -162,7 +162,6 @@ def miestacion(update, context):
   
   logger.info(f"User {update.effective_user['username']} asked for mi estacion data")
 
-
 # Hacer una peticion a la API que genera una imagen http://localhost:8000/generate?prompt= || prompt es texto que escribe el usuario
 def generate_image(update, context):
     logger.info(f"User {update.effective_user['username']} asked for image generation")
@@ -196,7 +195,6 @@ def generate_image(update, context):
     else:
       # Si no hay respuesta
       context.bot.send_message(chat_id=update.effective_chat.id, text="No se ha podido generar la imagen")
-
 
 # Función para el comando /help
 def help(update, context):
