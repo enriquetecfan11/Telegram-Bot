@@ -24,36 +24,49 @@ def scrape_metro_status():
     # Initialize a dictionary to store the status of each line
     line_statuses = {}
     
-    # Loop through each line number
-    for i in range(1, 12):
-        # Construct the class name for the line image
-        line_class = f'linea-{i}'
+    # Find all elements with class "list__lineas__element"
+    line_elements = soup.find_all(class_='list__lineas__element')
+    
+    # Loop through each line element
+    print("Estado de las líneas del metro de Madrid:")
+    for line_element in line_elements:
+        # Find the span with class "state--green" or "state--red" within the line element
+        status_element = line_element.find('span', class_=["state--green", "state--red"])
 
-        print("Estado lineas del metro de Madrid")
-        # Find the element with the specific class name
-        line_element = soup.find(class_=line_class)
-        
-        # Check if the line element was found
-        if line_element:
-            # Find the status span related to the line using find_next to handle non-direct siblings
-            status_element = line_element.find_next("span", class_=["state--green", "state--red"])
-            
-            # Check if the status element was found
-            if status_element:
-                # Determine the status based on the class of the status element
-                if 'state--green' in status_element['class']:
-                    status = 'Funcionamiento normal'
-                elif 'state--red' in status_element['class']:
-                    status = 'Servicio interrumpido'
-                else:
-                    status = 'No se ha podido determinar el estado'
-            else:
-                status = 'Status element not found'
+        # Find the line number within the line element (if it exists)
+        line_number = line_element.find('span', class_='list__lineas__element__numero')
+        if line_number:
+            line_number = line_number.text.strip()
         else:
-            status = 'No se ha podido determinar el estado'
+            # For lines without a specific number, assign a number based on index
+            line_number = str(line_elements.index(line_element) + 1)
         
-        # Add the status to the dictionary
-        line_statuses[f'Line {i}'] = status
+        # Check if both status and line number are found
+        if status_element and line_number:
+            # Determine the status based on the class of the status element
+            if 'state--green' in status_element['class']:
+                status = 'Funcionamiento normal'
+            elif 'state--red' in status_element['class']:
+                status = 'Servicio interrumpido'
+            else:
+                status = 'No se ha podido determinar el estado'
+            
+            # If the line number corresponds to lines 13 to 16, update the name accordingly
+            if line_number == '13':
+                line_number = 'Ramal'
+            elif line_number == '14':
+                line_number = 'Metro ligero 1'
+            elif line_number == '15':
+                line_number = 'Metro ligero 2'
+            elif line_number == '16':
+                line_number = 'Metro ligero 3'
+            
+            # Add the status to the dictionary with the line number as key
+            line_statuses[line_number] = status
+    
+    # Print the line statuses
+    for line, status in line_statuses.items():
+        print(f'Línea {line}: {status}')
     
     # Return the dictionary containing the statuses
     return line_statuses
