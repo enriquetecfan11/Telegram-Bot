@@ -230,7 +230,7 @@ def generate_image(update, context):
 
 # Función para el comando /help
 def help(update, context):
-   #Comandos disponibles
+    #Comandos disponibles
     output = """
     Comandos disponibles:
     - /start: Inicia el bot
@@ -251,71 +251,6 @@ def help(update, context):
     # Log the message
     logger.info(f"User {update.effective_user['username']} asked for help")
 
-
-# ------------------------------
-# Comandos programados
-# ------------------------------
-
-# Funcion para enviar mensajes automaticos 
-def callback_auto_message(update, context):
-  now = datetime.now(timezone('Europe/Madrid'))
-  current_time = now.strftime("%H:%M:%S")
-
-  if current_time == "09:00:00":
-    # Enviar mensaje de espera al usuario
-    context.bot.send_message(chat_id='207196532', text="Buenos Dias! Son las 9:00")
-    context.bot.send_message(chat_id='207196532', text="Buenos Dias! Bolsa de Madrid abierta.")
-  elif current_time == "15:30:00":
-    # Enviar mensaje de espera al usuario
-    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Son las 15:30")
-    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Bolsa de Nueva York abierta.")
-  elif current_time == "17:30:00":
-    # Enviar mensaje de espera al usuario
-    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Son las 17:30")
-    context.bot.send_message(chat_id='207196532', text="Buenas Tardes! Bolsa de Madrid cerrada.")
-  elif current_time == "22:00:00":
-    # Enviar mensaje de espera al usuario
-    context.bot.send_message(chat_id='207196532', text="Buenas Noches! Son las 22:00")
-    context.bot.send_message(chat_id='207196532', text="Buenas Noches! Bolsa de Nueva York cerrada.")
-  else:
-    context.bot.send_message(chat_id='207196532', text="No hay mensajes programados para esta hora")
-
-# Funcion para iniciar el envio de mensajes automaticos
-def start_auto_messaging(update, context):
-    chat_id = update.message.chat_id
-
-    context.bot.send_message(chat_id=chat_id, text='Mensajes automaticos iniciados!')
-
-    # Send data every 5 minutes
-    # context.job_queue.run_repeating(callback_auto_message, 300, context=chat_id, name=str(chat_id))
-
-    # Sen data all days at 9:00 madrid timezone
-    context.job_queue.run_daily(callback_auto_message, time(hour=9, minute=0, tzinfo=pytz.timezone('Europe/Madrid')), context=chat_id, name=str(chat_id))
-
-    # Send data all days at 15:30 madrid timezone
-    context.job_queue.run_daily(callback_auto_message, time(hour=15, minute=30, tzinfo=pytz.timezone('Europe/Madrid')), context=chat_id, name=str(chat_id))
-
-    # Send data all days at 17:30 madrid timezone
-    context.job_queue.run_daily(callback_auto_message, time(hour=17, minute=30, tzinfo=pytz.timezone('Europe/Madrid')), context=chat_id, name=str(chat_id))
-
-    # Send data all days at 22:00 madrid timezone
-    context.job_queue.run_daily(callback_auto_message, time(hour=22, minute=0, tzinfo=pytz.timezone('Europe/Madrid')), context=chat_id, name=str(chat_id))
-
-
-# Funcion para parar el envio de mensajes automaticos
-def stop_notify(update, context):
-    chat_id = update.message.chat_id
-    context.bot.send_message(chat_id=chat_id, text='Mensajes automaticos parados!')
-    job = context.job_queue.get_jobs_by_name(str(chat_id))
-    job[0].schedule_removal()
-
-# Manejador de comandos para el comando /auto
-dispatcher.add_handler(CommandHandler("auto", start_auto_messaging))
-logger.info("Auto handler added")
-
-# Manejador de comandos para el comando /stop
-dispatcher.add_handler(CommandHandler("stop", stop_notify))
-logger.info("Stop handler added")
 
 
 # ------------------------------
