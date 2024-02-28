@@ -21,22 +21,28 @@ Tengo twitter @enriquetecfan, por si quieres seguirme o preguntarme algo sobre e
 ## Comandos del bot / Bot Commands
 
 The bot have this comands:
-
-+ /help: Show this message
-+ /crypto: Show the current price of crypto currencies
-+ /news: Show the latest news
-+ /weather: Show the current weather in Mondejar
-+ /stonks: Show the current price of Stonks
-+ /economicas: Show the latest news of economics news
+- /start: Starts the bot
+- /price <crypto name> : Displays the price of a cryptocurrency
+- /weather <city name> : Displays the weather of a city
+- /metro: Displays the status of Madrid Metro lines
+- /hour: Displays the current time
+- /stonks: Displays stock prices
+- /news: Displays economic news
+- /bolsa: Displays stock market opening times
+- /station: Displays my temperature station data
+- /generate <text>: Generates an image with the text we pass it.
 
 El bot tiene estos comandos:
-
-+ /help: Mostrar este mensaje
-+ /crypto: Mostrar el precio actual de las criptomonedas
-+ /news: Mostrar las últimas noticias
-+ /tiempo: Mostrar el tiempo actual en Mondejar
-+ /stonks: Mostrar el precio actual de las Stonks
-+ /economicas: Mostrar las últimas noticias de economía
+- /start: Inicia el bot
+- /price <nombre crypto>: Muestra el precio de una criptomoneda
+- /weather <nombre ciudad> : Muestra el tiempo de una ciudad
+- /metro: Muestra el estado de las líneas de Metro de Madrid
+- /hora: Muestra la hora actual
+- /stonks: Muestra los precios de las acciones
+- /noticias: Muestra las noticias económicas
+- /bolsa: Muestra los horarios de apertura de las bolsas
+- /miestacion: Muestra los datos de mi estación de temperatura
+- /generate <texto>: Genera una imagen con el texto que le pasemos
 
 ## Para poder usar el bot con docker / To use the bot with docker
 
