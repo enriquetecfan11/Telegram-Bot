@@ -145,6 +145,7 @@ def noticias(update, context):
     # Log the message
     logger.info(f"User {update.effective_user['username']} asked for news")
 
+# Función para el comando /bolsa
 def bolsaOpen(update, context):
     # Mensajes
     output = """ 
@@ -155,6 +156,7 @@ def bolsaOpen(update, context):
     # Enviar los horarios de apertura de las bolsas al usuario
     context.bot.send_message(chat_id=update.effective_chat.id, text=output)
 
+# Función para el comando /miestacion
 def miestacion(update, context):
   weather_status = miestacion()
   
@@ -162,7 +164,7 @@ def miestacion(update, context):
   
   logger.info(f"User {update.effective_user['username']} asked for mi estacion data")
 
-# Hacer una peticion a la API que genera una imagen http://localhost:8000/generate?prompt= || prompt es texto que escribe el usuario
+# Función para el comando /generate
 def generate_image(update, context):
     logger.info(f"User {update.effective_user['username']} asked for image generation")
     # Send the message to the user
@@ -218,7 +220,6 @@ def help(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=output)
     # Log the message
     logger.info(f"User {update.effective_user['username']} asked for help")
-
 
 
 # ------------------------------
